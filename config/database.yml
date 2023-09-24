@@ -7,14 +7,12 @@
 default: &default
   adapter: postgresql
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  
 
 development:
   <<: *default
-  host: <%= ENV["HOST"] %>
-  database: <%= ENV["DBNAME"] %>
-  username: <%= ENV["USERNAME"] %>
-  password: <%= ENV["PASSWORD"] %>
+  database: simplechat_development_2
+  username: postgres
+  password: postgres
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
