@@ -73,12 +73,15 @@ export const Chat: React.FC<Props> = ({ cookies }) => {
 
   const onSubmit = async (data: any) => {
     await sendMessage(data.messages, cookies.userName);
-    reset(); // Mengosongkan input setelah mengirim pesan
+    reset(); 
   };
   const commentEnterSubmit = (e: any) => {
     if (e.key === "Enter" && e.shiftKey == false) {
       e.preventDefault();
-      return handleSubmit(onSubmit)();
+      handleSubmit((data) => {
+        onSubmit(data);
+        reset(); 
+      })();
     }
   };
 
@@ -103,19 +106,19 @@ export const Chat: React.FC<Props> = ({ cookies }) => {
   };
 
   return (
-    <Center bg="#444654" w="100%">
-      <Stack w="100vw" maxH="100vh" spacing={0}>
+    <Center bg="#444654" w="100%" minH="100vh">
+      <Stack w="100vw" h="100vh" spacing={0}>
         <Stack textAlign="center" my={4} py={4}>
           <Text as="h1" fontSize="2xl" color="white">
             Hi, {cookies.userName}
           </Text>
         </Stack>
         <Stack
-          maxH="100vh"
+          h="100vh"
           overflowY="auto"
           width="auto"
           rounded={2}
-          mx={20}
+          mx={{base:0, md:20}}
           py={10}
           px={6}
           spacing={4}
@@ -142,7 +145,7 @@ export const Chat: React.FC<Props> = ({ cookies }) => {
             </Stack>
           ))}
         </Stack>
-        {/* <form onSubmit={handleSubmit(onSubmit)}> */}
+        <form onSubmit={handleSubmit(onSubmit)}>
         <VStack spacing={0} w="100%">
           <HStack bg="#343542" p={4} borderRadius="md" width="100%">
             <Textarea
@@ -175,7 +178,7 @@ export const Chat: React.FC<Props> = ({ cookies }) => {
             />
           </HStack>
         </VStack>
-        {/* </form> */}
+        </form>
       </Stack>
     </Center>
   );
