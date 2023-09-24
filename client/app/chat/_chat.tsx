@@ -6,8 +6,8 @@ import {
   Stack,
   Text,
   VStack,
-  Input,
   IconButton,
+  Textarea,
 } from "@chakra-ui/react";
 import { RiSendPlane2Fill } from "react-icons/ri";
 import React, { useState, useEffect, useRef } from "react";
@@ -22,7 +22,7 @@ interface Message {
 interface Props {
   cookies: {
     userName: string;
-    token: string
+    token: string;
   };
 }
 
@@ -59,7 +59,7 @@ export const Chat: React.FC<Props> = ({ cookies }) => {
       setMessages((prevMessages) => [...prevMessages, message]);
     };
     return () => {
-      ws.close(); 
+      ws.close();
     };
   }, []);
 
@@ -71,9 +71,15 @@ export const Chat: React.FC<Props> = ({ cookies }) => {
     resetScroll();
   }, [messages]);
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: any) => {
     await sendMessage(data.messages, cookies.userName);
     reset(); // Mengosongkan input setelah mengirim pesan
+  };
+  const commentEnterSubmit = (e: any) => {
+    if (e.key === "Enter" && e.shiftKey == false) {
+      e.preventDefault();
+      return handleSubmit(onSubmit)();
+    }
   };
 
   const fetchMessages = async () => {
@@ -84,7 +90,7 @@ export const Chat: React.FC<Props> = ({ cookies }) => {
     setMessagesAndScrollDown(data);
   };
 
-  const setMessagesAndScrollDown = (data) => {
+  const setMessagesAndScrollDown = (data: any) => {
     setMessages(data);
     resetScroll();
   };
@@ -97,18 +103,19 @@ export const Chat: React.FC<Props> = ({ cookies }) => {
   };
 
   return (
-    <Center minH="100vh" bg="#444654">
-      <Stack w={{ base: "100vw", lg: "7xl" }} py={8} px={4} spacing={0}>
-        <Stack textAlign="center" mb={4}>
+    <Center bg="#444654" w="100%">
+      <Stack w="100vw" maxH="100vh" spacing={0}>
+        <Stack textAlign="center" my={4} py={4}>
           <Text as="h1" fontSize="2xl" color="white">
             Hi, {cookies.userName}
           </Text>
         </Stack>
         <Stack
-          maxH={{ base: "full", md: "400px" }}
-          overflowY="scroll"
+          maxH="100vh"
+          overflowY="auto"
           width="auto"
           rounded={2}
+          mx={20}
           py={10}
           px={6}
           spacing={4}
@@ -135,44 +142,40 @@ export const Chat: React.FC<Props> = ({ cookies }) => {
             </Stack>
           ))}
         </Stack>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <VStack spacing={0}>
-            <HStack
-              bg="#343542"
-              p={4}
-              borderRadius="md"
+        {/* <form onSubmit={handleSubmit(onSubmit)}> */}
+        <VStack spacing={0} w="100%">
+          <HStack bg="#343542" p={4} borderRadius="md" width="100%">
+            <Textarea
+              variant="unstyled"
+              py={2}
+              px={3}
+              my={4}
+              mx={2}
               width="100%"
-              maxH="400px"
-              overflowY="auto"
-            >
-              <Input
-                variant="unstyled"
-                py={2}
-                px={3}
-                my={4}
-                mx={2}
-                type="text"
-                placeholder="Send a message"
-                borderColor="transparent"
-                focusBorderColor="transparent"
-                _placeholder={{ color: "#6C6C7C" }}
-                color="white"
-                bg="#40414F"
-                autoComplete="off"
-                {...register("messages", {
-                  validate: (value) => value.trim().length > 0,
-                })}
-              />
-              <IconButton
-                type="submit"
-                colorScheme="teal"
-                aria-label="Send message"
-                icon={<RiSendPlane2Fill />}
-                isDisabled={!formState.isValid}
-              />
-            </HStack>
-          </VStack>
-        </form>
+              minH="2px"
+              placeholder="Send a message"
+              borderColor="transparent"
+              focusBorderColor="transparent"
+              _placeholder={{ color: "#6C6C7C" }}
+              color="white"
+              bg="#40414F"
+              autoComplete="off"
+              resize="none"
+              onKeyDown={commentEnterSubmit}
+              {...register("messages", {
+                validate: (value) => value.trim().length > 0,
+              })}
+            />
+            <IconButton
+              type="submit"
+              colorScheme="teal"
+              aria-label="Send message"
+              icon={<RiSendPlane2Fill />}
+              isDisabled={!formState.isValid}
+            />
+          </HStack>
+        </VStack>
+        {/* </form> */}
       </Stack>
     </Center>
   );

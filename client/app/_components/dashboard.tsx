@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  Button,
-  Center,
-  Text,
-  VStack,
-  Input,
-} from "@chakra-ui/react";
+import { Button, Center, Text, VStack, Input } from "@chakra-ui/react";
 import React from "react";
 import { startChat } from "../action";
 import { toast } from "sonner";
@@ -24,19 +18,21 @@ export const Dashboard = () => {
   const userName = watch("userName").trim();
 
   return (
-    <Center h="100vh" bg="#00002E">
+    <Center w="100%" bg="#00002E" h="100vh">
       <form
         onSubmit={handleSubmit((data) => {
           toast.promise(() => startChat(data.userName), {
             loading: "Loading...",
-            success: ({ msg, err }: { msg: string; err: Error }) => {
-              if (err) throw err;
+            success: (result) => {
+              if (result.err) {
+                throw result.err;
+              }
               setTimeout(() => {
                 router.push("/chat");
               }, 1000);
-              return msg;
+              return result.msg;
             },
-            error: (err: Error) => {
+            error: (err) => {
               return err.message ?? err;
             },
             finally: () => {},
@@ -44,7 +40,12 @@ export const Dashboard = () => {
         })}
       >
         <VStack spacing={10}>
-          <Text as="h1" fontSize="8xl" fontWeight={700} color="#D292FF">
+          <Text
+            as="h1"
+            fontSize={{ base: "6xl", md: "8xl" }}
+            fontWeight={700}
+            color="#D292FF"
+          >
             Welcome !
           </Text>
           <VStack w="100%" align="center">
