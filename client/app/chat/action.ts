@@ -2,7 +2,7 @@
 export async function sendMessage(body: string, name:string) {
     try {
         
-        await fetch("https://simple-chat-production-b153.up.railway.app/messages", {
+        await fetch("https://simple-app-chat-production.up.railway.app/messages", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

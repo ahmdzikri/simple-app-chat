@@ -33,7 +33,7 @@ export const Chat: React.FC<Props> = ({ cookies }) => {
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const ws = new WebSocket(
-      "wss://simple-chat-production-b153.up.railway.app/cable/"
+      "wss://simple-app-chat-production.up.railway.app/cable/"
     );
     ws.onopen = () => {
       console.log("Connected to websocket server");
@@ -78,7 +78,7 @@ export const Chat: React.FC<Props> = ({ cookies }) => {
 
   const fetchMessages = async () => {
     const response = await fetch(
-      "https://simple-chat-production-b153.up.railway.app/messages"
+      "https://simple-app-chat-production.up.railway.app/messages"
     );
     const data = await response.json();
     setMessagesAndScrollDown(data);
